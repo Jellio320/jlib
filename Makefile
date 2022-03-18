@@ -36,7 +36,7 @@ $(OBJDIR)%_a.o: $(SRCDIR)%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)%_so.o: $(SRCDIR)%.c
-	$(CC) $(CFLAGS) -fPIC -c $< -o $@
+	$(CC) $(CFLAGS) -fPIC -w -c $< -o $@
 
 $(OBJDIR)%.d: $(SRCDIR)%.c
 	$(CC) $< $(DEPFLAGS)
