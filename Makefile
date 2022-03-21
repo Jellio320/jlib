@@ -5,7 +5,7 @@ OBJDIR = obj/
 
 CC = gcc
 CSTD = c99
-CFLAGS = --std=$(CSTD) -O2 -g0 -Wall -Wextra
+CFLAGS = --std=$(CSTD) -O2 -g0 -Wall -Wextra -ffunction-sections -fdata-sections
 LD = $(CC)
 LDFLAGS = -shared
 AR = ar

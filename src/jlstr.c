@@ -1,16 +1,17 @@
 #include <stdlib.h>
-#include <string.h>
+#include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 #include <ctype.h>
 #include <assert.h>
 
-int32_t jlstrislower(char *str) {
+uint32_t jlstrislower(char *str) {
 	if(str == NULL)
 		return 0;
 
-	int32_t	count = 0;
-	for(char *c = str; *c != 0; c++) {
-		if(!islower(*c))
+	uint32_t count = 0;
+	for(; *str != 0; str++) {
+		if(!islower(*str))
 			return 0;
 
 		count++;
@@ -19,28 +20,13 @@ int32_t jlstrislower(char *str) {
 	return count;
 }
 
-int32_t jlstrtolower(char *str) {
+uint32_t jlstrisupper(char *str) {
 	if(str == NULL)
 		return 0;
 
-	int32_t	count = 0;
-	for(char *c = str; *c != 0; c++) {
-		if(isupper(*c))
-			*c = tolower(*c);
-
-		count++;
-	}
-
-	return count;
-}
-
-int32_t jlstrisupper(char *str) {
-	if(str == NULL)
-		return 0;
-
-	int32_t count = 0;
-	for(char *c = str; *c != 0; c++) {
-		if(!isupper(*c))
+	uint32_t count = 0;
+	for(; *str != 0; str++) {
+		if(!isupper(*str))
 			return 0;
 
 		count++;
@@ -49,28 +35,13 @@ int32_t jlstrisupper(char *str) {
 	return count;
 }
 
-int32_t jlstrtoupper(char *str) {
+uint32_t jlstrisnumeric(char *str) {
 	if(str == NULL)
 		return 0;
 
-	int32_t count = 0;
-	for (char *c = str; *c != 0; c++) {
-		if(islower(*c))
-			*c = toupper(*c);
-
-		count++;
-	}
-
-	return count;
-}
-
-int32_t jlstrisnumeric(char* str) {
-	if(str == NULL)
-		return 0;
-
-	int32_t count = 0;
-	for(char *c = str; *c != 0; c++) {
-		if(!isdigit(*c))
+	uint32_t count = 0;
+	for(; *str != 0; str++) {
+		if(!isdigit(*str))
 			return 0;
 
 		count++;
@@ -79,20 +50,57 @@ int32_t jlstrisnumeric(char* str) {
 	return count;
 }
 
-void jlstrinv(char *src, char* dest) {
-	size_t offset = strlen(src) - 1;
+uint32_t jlstrtolower(char *str) {
+	if(str == NULL)
+		return 0;
+
+	uint32_t count = 0;
+	for(; *str != 0; str++) {
+		if(isupper(*str))
+			*str = tolower(*str);
+
+		count++;
+	}
+
+	return count;
+}
+
+uint32_t jlstrtoupper(char *str) {
+	if(str == NULL)
+		return 0;
+
+	uint32_t count = 0;
+	for (; *str != 0; str++) {
+		if(islower(*str))
+			*str = toupper(*str);
+
+		count++;
+	}
+
+	return count;
+}
+
+void jlstrinv(char *src, char *dest) {
+	size_t offset;
+	if(src == NULL || dest == NULL || ((offset = strlen(src)) == 0)) {
+		*dest = 0;
+		return;
+	}
+
 	if(src == dest) {
-		for(dest += offset; src < dest; src++) {
+		for(dest += --offset; src < dest; src++, dest--) {
 			char buf = *src;
 			*src = *dest;
-			*dest-- = buf;
+			*dest = buf;
 		}
+		return;
 	} else {
-		for(int32_t i = offset; i > -1; i--) {
-			*dest++ = *(src + i);
+		while(offset != 0) {
+			*dest++ = *(src + --offset);
 		}
 		// set the last byte of destination to be NULL
 		*dest = 0;
+		return;
 	}
 }
 
