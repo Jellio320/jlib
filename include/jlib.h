@@ -33,11 +33,6 @@ void jlstrinv(char *str, char *dest);
 
 // jlio
 
-int jlfliparrayls(void *array, const size_t length, const size_t stride);
-#define jlfliparrayl(array, length) jlfliparrayls(array, length, sizeof *array)
-#define jlfliparrays(array, stride) jlfliparrayls(array, sizeof(array), stride)
-#define jlfliparray(array) jlfliparrayls(array, sizeof(array), sizeof *array)
-
 int64_t jlgetfilesize(const int fd);
 int64_t jlfgetfilesize(FILE *file);
 int64_t jlsgetfilesize(const char *pathname);
@@ -45,6 +40,13 @@ int64_t jlsgetfilesize(const char *pathname);
 int jlparsefile(char *dest, FILE *file);
 int jlparsenfile(char *dest, size_t n, FILE *file);
 
+
+// jlmisc
+
+int jlfliparrayls(void *array, const size_t length, const size_t stride);
+#define jlfliparrayl(array, length) jlfliparrayls(array, length, sizeof *array)
+#define jlfliparrays(array, stride) jlfliparrayls(array, sizeof(array), stride)
+#define jlfliparray(array) jlfliparrayls(array, sizeof(array), sizeof *array)
 
 #ifdef __cplusplus
 }

@@ -44,5 +44,5 @@ $(OBJDIR)%.d: $(SRCDIR)%.c
 -include $(DEPS)
 
 clean:
-	rm -f $(OBJDIR)* $(OUTPUT_A) $(OUTPUT_SO)
+	rm $(OBJDIR)* $(OUTPUT_A) $(OUTPUT_SO)
 
