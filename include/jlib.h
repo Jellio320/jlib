@@ -1,5 +1,5 @@
 #ifndef JLIB_H
-#define JLIB_H
+#define JLIB_H 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -9,7 +9,11 @@ extern "C" {
 #include <stdint.h>
 
 #ifndef UNUSED
+#ifndef NDEBUG
 #define UNUSED(x) ((void) (x))
+#else
+#define UNUSED(x) do { } while(0)
+#endif // NDEBUG
 #endif
 
 typedef unsigned char uchar;
@@ -21,29 +25,32 @@ typedef long long llong;
 
 // jlstr
 
-uint32_t jlstrislower(char *str);
-uint32_t jlstrisupper(char *str);
-uint32_t jlstrisnumeric(char *str);
+extern uint32_t jlstrislower(char *str);
+extern uint32_t jlstrisupper(char *str);
+extern uint32_t jlstrisnumeric(char *str);
 
-uint32_t jlstrtolower(char *str);
-uint32_t jlstrtoupper(char *str);
+extern uint32_t jlstrtolower(char *str);
+extern uint32_t jlstrtoupper(char *str);
 
-void jlstrinv(char *str, char *dest);
-
+extern void jlstrinv(char *str, char *dest);
 
 // jlio
 
-int64_t jlgetfilesize(const int fd);
-int64_t jlfgetfilesize(FILE *file);
-int64_t jlsgetfilesize(const char *pathname);
+extern int64_t jlgetfilesize(const int fd);
+extern int64_t jlfgetfilesize(FILE *file);
+extern int64_t jlsgetfilesize(const char *pathname);
 
-int jlparsefile(char *dest, FILE *file);
-int jlparsenfile(char *dest, size_t n, FILE *file);
+extern int jlfparse(char *dest, FILE *file);
+extern int jlfnparse(char *dest, size_t n, FILE *file);
 
+extern int64_t jlfgetline(char *restrict dest, FILE *restrict file);
+extern int64_t jlfgetnline(char *restrict dest, size_t n, FILE *restrict file);
+extern int64_t jlfseekline(size_t line, FILE *file);
+extern uint64_t jlfcharcount(const char c, FILE *file);
 
 // jlmisc
 
-int jlfliparrayls(void *array, const size_t length, const size_t stride);
+extern int jlfliparrayls(void *array, const size_t length, const size_t stride);
 #define jlfliparrayl(array, length) jlfliparrayls(array, length, sizeof *array)
 #define jlfliparrays(array, stride) jlfliparrayls(array, sizeof(array), stride)
 #define jlfliparray(array) jlfliparrayls(array, sizeof(array), sizeof *array)

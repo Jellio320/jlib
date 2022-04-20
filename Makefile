@@ -7,7 +7,7 @@ CC = gcc
 CSTD = c99
 CFLAGS = --std=$(CSTD) -O2 -g0 -Wall -Wextra -ffunction-sections -fdata-sections
 LD = $(CC)
-LDFLAGS = -shared
+LDFLAGS = -shared -fPIC -lc
 AR = ar
 ARFLAGS = rcs
 
@@ -18,7 +18,7 @@ OBJS_SO := $(patsubst %.o, %_so.o, $(OBJS))
 DEPS := $(patsubst %.o, %.d, $(OBJS))
 DEPFLAGS = -MM -MF $@
 
-.PHONY: all clean
+.PHONY: all clean install uninstall
 
 all: $(DEPS) $(OUTPUT_A) $(OUTPUT_SO)
 
@@ -44,5 +44,17 @@ $(OBJDIR)%.d: $(SRCDIR)%.c
 -include $(DEPS)
 
 clean:
-	rm $(OBJDIR)* $(OUTPUT_A) $(OUTPUT_SO)
+	rm -f $(OBJDIR)* $(OUTPUT_A) $(OUTPUT_SO)
+
+install: all
+	@echo
+	@echo Installing
+	cp include/jlib.h /usr/local/include
+	cp $(OUTPUT_A) /usr/local/lib
+	cp $(OUTPUT_SO) /usr/local/lib
+
+uninstall:
+	rm -f /usr/local/include/jlib.h
+	rm -f /usr/local/lib/$(OUTPUT_A)
+	rm -f /usr/local/lib/$(OUTPUT_SO)
 

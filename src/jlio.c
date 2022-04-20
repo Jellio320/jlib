@@ -29,7 +29,7 @@ int64_t jlsgetfilesize(const char *pathname) {
 	return fs.st_size;
 }
 
-int jlparsefile(char *dest, FILE *file) {
+int jlfparse(char *dest, FILE *file) {
 	long pos;
 	if(dest == NULL || (pos = ftell(file)) == -1) {
 		*dest = 0;
@@ -51,7 +51,7 @@ int jlparsefile(char *dest, FILE *file) {
 	return count;
 }
 
-int jlparsenfile(char *dest, size_t n, FILE *file) {
+int jlfnparse(char *dest, size_t n, FILE *file) {
 	long pos;
 	if(dest == NULL || n == 0 || (pos = ftell(file)) == -1) {
 		*dest = 0;
@@ -70,6 +70,92 @@ int jlparsenfile(char *dest, size_t n, FILE *file) {
 
 	fseek(file, pos, SEEK_SET);
 
+	return count;
+}
+
+int64_t jlfgetline(char *restrict dest, FILE *restrict file) {
+	int64_t count = 0;
+	int c;
+
+	while((c = fgetc(file))) {
+		if(c == EOF || c == '\n')
+			break;
+
+		*dest++ = c;
+		count++;
+	}
+	*dest = 0;
+
+	if(errno) {
+		return -1;
+	}
+
+	return count;
+}
+
+int64_t jlfgetnline(char *restrict dest, size_t n, FILE *restrict file) {
+	if(!n) return 0;
+	else n--;
+
+	int64_t count = 0;
+	int c;
+
+	while((c = fgetc(file))) {
+		if(c == EOF || c == '\n')
+			break;
+
+		if(n) {
+			*dest++ = c;
+			count++;
+			n--;
+		}
+	}
+	*dest = 0;
+
+	if(errno) {
+		return -1;
+	}
+
+	return count;
+}
+
+int64_t jlfseekline(size_t line, FILE *file) {
+	rewind(file);
+
+	int64_t breakline = 0;
+	for(size_t i = 1; i < line; i++) {
+		char c;	
+		while((c = fgetc(file))) {
+			if(c == '\n') {
+				breakline++;
+				break;
+			} else if(c == EOF)
+				goto breakFor;
+		}
+	}
+
+breakFor:
+	return breakline;
+}
+
+uint64_t jlfcharcount(const char c, FILE *file) {
+	fpos_t pos;
+	fgetpos(file, &pos);
+	rewind(file);
+
+	uint64_t count = 0;
+	char in;
+
+	while((in = fgetc(file)) != EOF) {
+		if(in == c) {
+			count++;
+		}
+	}
+
+	fsetpos(file, &pos);
+	if(errno)
+		return 0;
+	
 	return count;
 }
 
